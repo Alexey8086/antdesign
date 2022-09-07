@@ -13,6 +13,7 @@ const [pageSize, setPageSize] = useState(0)
 const [currentPage, setCurrentPage] = useState(0)
 const [offset, setOffest] = useState(0)
 const [limit, setLimit] = useState(0)
+const [tableColumns, setColomns] = useState(columns)
 const offsetStep = 100
 
 function fetchData (offset, offsetIsChanged) {
@@ -71,7 +72,16 @@ const onChangeHandler = useCallback((page, pageSize) => {
 }, []) 
 
 
+const dragProps = {
 
+  onDragEnd(fromIndex, toIndex) {
+      const customColumns = [...columns]
+      const item = customColumns.splice(fromIndex, 1)[0]
+      customColumns.splice(toIndex, 0, item)
+      setColomns(customColumns)
+  },
+  nodeSelector: "th"
+}
 
 
 
@@ -79,10 +89,10 @@ return (
 
     <div className="app"> 
       <div className="table-container">
-        <ReactDragListView>
+        <ReactDragListView {...dragProps}>
           <Table
             ref={myRef}
-            columns={columns}
+            columns={tableColumns}
             dataSource={dataSourse}
             pagination={{
               pageSize: 15,
